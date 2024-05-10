@@ -5,7 +5,7 @@ import com.javierdiez.produccion.application.Authentication.LoginResponse;
 import com.javierdiez.produccion.application.UsuarioApplication.dtoUsuario.LoginUsuarioDto;
 import com.javierdiez.produccion.application.UsuarioApplication.dtoUsuario.RegistroUsuarioDto;
 import com.javierdiez.produccion.domian.usuarioDomain.Usuario;
-import com.javierdiez.produccion.infrastructure.security.JWTUtils;
+import com.javierdiez.produccion.infrastructure.security.JWTService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final JWTUtils jwtUtils;
+    private final JWTService jwtUtils;
 
-    public AuthenticationController(AuthenticationService authenticationService, JWTUtils jwtUtils) {
+    public AuthenticationController(AuthenticationService authenticationService, JWTService jwtUtils) {
         this.authenticationService = authenticationService;
         this.jwtUtils = jwtUtils;
     }
@@ -31,12 +31,12 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUsuarioDto loginUsuarioDto){
-        Usuario usuarioAutenticado = authenticationService.authenticate(loginUsuarioDto);
-        String jwtToken = jwtUtils.generateToken(usuarioAutenticado);
+        Usuario userAuthenticated = authenticationService.authenticate(loginUsuarioDto);
+        String jwtToken = jwtUtils.generateToken(userAuthenticated);
 
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtUtils.getExpirationTime());
-        return ResponseEntity.ok(loginResponse);
+        System.out.println(loginResponse);
 
+      return ResponseEntity.ok(loginResponse);
     }
-
 }

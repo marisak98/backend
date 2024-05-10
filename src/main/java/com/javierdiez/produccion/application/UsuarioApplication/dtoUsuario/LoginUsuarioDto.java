@@ -1,8 +1,11 @@
 package com.javierdiez.produccion.application.UsuarioApplication.dtoUsuario;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter @Setter
 public class LoginUsuarioDto {
     private String email;

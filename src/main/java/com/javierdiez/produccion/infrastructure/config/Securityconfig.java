@@ -38,6 +38,7 @@ public class Securityconfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/api/s3/**").permitAll()
                     .anyRequest().authenticated()
             )
             .sessionManagement(sessionManagement -> sessionManagement

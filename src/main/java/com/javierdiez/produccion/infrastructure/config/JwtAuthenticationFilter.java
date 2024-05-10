@@ -1,6 +1,6 @@
 package com.javierdiez.produccion.infrastructure.config;
 
-import com.javierdiez.produccion.infrastructure.security.JWTUtils;
+import com.javierdiez.produccion.infrastructure.security.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,11 +22,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final HandlerExceptionResolver handlerExceptionResolver;
 
-    private  final JWTUtils jwtUtils;
+    private  final JWTService jwtUtils;
     private final UserDetailsService userDetailsService;
 
 
-    public JwtAuthenticationFilter(JWTUtils jwtUtils, UserDetailsService userDetailsService, HandlerExceptionResolver handlerExceptionResolver) {
+    public JwtAuthenticationFilter(JWTService jwtUtils, UserDetailsService userDetailsService, HandlerExceptionResolver handlerExceptionResolver) {
         this.handlerExceptionResolver = handlerExceptionResolver;
         this.userDetailsService = userDetailsService;
         this.jwtUtils = jwtUtils;
