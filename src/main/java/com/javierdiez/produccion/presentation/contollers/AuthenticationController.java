@@ -7,12 +7,12 @@ import com.javierdiez.produccion.application.UsuarioApplication.dtoUsuario.Regis
 import com.javierdiez.produccion.domian.usuarioDomain.Usuario;
 import com.javierdiez.produccion.infrastructure.security.JWTService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
@@ -31,12 +31,6 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUsuarioDto loginUsuarioDto){
-        Usuario userAuthenticated = authenticationService.authenticate(loginUsuarioDto);
-        String jwtToken = jwtUtils.generateToken(userAuthenticated);
-
-        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtUtils.getExpirationTime());
-        System.out.println(loginResponse);
-
-      return ResponseEntity.ok(loginResponse);
+      return  ResponseEntity.ok(authenticationService.authenticate(loginUsuarioDto));
     }
 }

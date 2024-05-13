@@ -1,6 +1,7 @@
 package com.javierdiez.produccion.presentation.S3Controller;
 
 import com.javierdiez.produccion.application.AWSS3Application.S3Service;
+import com.javierdiez.produccion.domian.planosDomain.Planos;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -11,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/s3")
 public class S3Controller {
 
@@ -51,4 +53,8 @@ public class S3Controller {
                 .body(new InputStreamResource(content));
     }
 
+    @GetMapping("/list")
+    public List<Planos> getDocuments(@PathVariable String blueprintName){
+        return s3Service.getDocuments(blueprintName);
+    }
 }

@@ -1,7 +1,9 @@
 package com.javierdiez.produccion.domian.planosDomain;
 
+import com.javierdiez.produccion.domian.Carpetas.Folder;
 import com.javierdiez.produccion.domian.ordenProduccionDomain.OrdenProduccion;
 import com.javierdiez.produccion.domian.tareaDomain.Tarea;
+import com.javierdiez.produccion.domian.team.Team;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,5 +35,13 @@ public class Planos {
         @ManyToOne
         @JoinColumn(name = "id_order_production")
         private OrdenProduccion ordenProduccion;
+
+        @ManyToOne
+        @JoinColumn(name = "folder_id")
+        private Folder folder;
+
+        @ManyToOne
+        @JoinColumn(name = "team_id")
+        private Team team;
 
 }

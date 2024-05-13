@@ -20,6 +20,14 @@ spring:
         access-key:
         secret-key:
         bucket-name:
+  logging:
+    level:
+      org:
+        hibernate:
+          SQL: debug
+          type:
+            descriptor:
+              sql: trace
 
   application:
     name: javierdiez

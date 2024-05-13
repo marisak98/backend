@@ -6,8 +6,11 @@ import com.javierdiez.produccion.domian.usuarioDomain.Rol;
 import com.javierdiez.produccion.domian.usuarioDomain.Usuario;
 import com.javierdiez.produccion.infrastructure.UsuarioInfrastructure.UsuarioRepository;
 import com.javierdiez.produccion.infrastructure.security.JWTService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,19 +19,16 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager auth;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
 
     public AuthenticationService(
             UsuarioRepository usuarioRepository,
             PasswordEncoder passwordEncoder,
-            AuthenticationManager auth,
             AuthenticationManager authenticationManager,
             JWTService jwtService){
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
-        this.auth = auth;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
@@ -43,15 +43,28 @@ public class AuthenticationService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario authenticate(LoginUsuarioDto input){
+    public LoginResponse authenticate(LoginUsuarioDto input){
        authenticationManager.authenticate(
                new UsernamePasswordAuthenticationToken(
                input.getEmail(),
                input.getPassword()
        ));
-        /* hacer que el return printee el usuario en consola. */
         UserDetails user = usuarioRepository.findByEmail(input.getEmail()).orElseThrow();
         String toke = jwtService.generateToken(user);
-        return usuarioRepository.findByEmail(input.getEmail()).orElseThrow();
+        return LoginResponse.builder()
+                .token(toke)
+                .expiresIn(jwtService.getExpirationTime())
+                .build();
+    }
+
+    public Usuario getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!(authentication instanceof AnonymousAuthenticationToken)){
+            String currentUserName = authentication.getName();
+            return usuarioRepository.findByEmail(currentUserName).orElseThrow();
+
+        }
+
+        return null;
     }
 }
